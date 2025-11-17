@@ -40,7 +40,7 @@ public class TraitMagnetic extends AbstractArmorTraitLeveled {
         double x = player.posX;
         double y = player.posY;
         double z = player.posZ;
-        double range = 1.8D + (level - 1) * 0.3F;
+        double range = 1.8D + (level - 1) * 3.0F;
 
         List<EntityItem> items = player.getEntityWorld().getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(x - range, y - range, z - range, x + range, y + range, z + range));
         int pulled = 0;
