@@ -19,8 +19,12 @@
 
 package c4.conarm.common.armor.modifiers.accessories;
 
+import c4.conarm.client.models.accessories.ModelCloak;
 import c4.conarm.common.armor.modifiers.ArmorModifiers;
+import c4.conarm.lib.modifiers.IAccessoryRender;
 import c4.conarm.lib.tinkering.TinkersArmor;
+import c4.conarm.lib.utils.ConstructUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,16 +32,23 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import slimeknights.tconstruct.library.modifiers.IToolMod;
 import slimeknights.tconstruct.library.utils.TagUtil;
 import slimeknights.tconstruct.library.utils.TinkerUtil;
 import slimeknights.tconstruct.library.utils.ToolHelper;
 
-public class ModTravelSneak extends AbstractToggleAccessoryModifier {
+public class ModTravelSneak extends AbstractToggleAccessoryModifier implements IAccessoryRender {
+
+    @SideOnly(Side.CLIENT)
+    private static ModelCloak model;
+    private static ResourceLocation texture = ConstructUtils.getResource("textures/models/accessories/travel_cloak.png");
 
     public ModTravelSneak() {
         super("travel_sneak", true);
@@ -81,6 +92,16 @@ public class ModTravelSneak extends AbstractToggleAccessoryModifier {
     @Override
     public boolean canApplyTogether(IToolMod otherModifier) {
         return otherModifier != ArmorModifiers.modConcealed;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void onAccessoryRender(EntityLivingBase entityLivingBaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+        if (model == null) {
+            model = new ModelCloak();
+        }
+        Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+        model.render(entityLivingBaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
     }
 
     @Override
