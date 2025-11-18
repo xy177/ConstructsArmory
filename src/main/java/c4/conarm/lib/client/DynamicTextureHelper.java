@@ -27,7 +27,9 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.UncheckedExecutionException;
+
 import javax.annotation.Nonnull;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -40,6 +42,7 @@ import slimeknights.tconstruct.library.materials.Material;
 import slimeknights.tconstruct.library.modifiers.IModifier;
 import slimeknights.tconstruct.library.utils.TagUtil;
 import slimeknights.tconstruct.library.utils.TinkerUtil;
+import slimeknights.tconstruct.tools.modifiers.ModIncognito;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -86,8 +89,12 @@ public class DynamicTextureHelper {
             String partIn;
 
             switch (i) {
-                case 0: partIn = ArmorMaterialType.CORE; break;
-                case 1: partIn = ArmorMaterialType.PLATES; break;
+                case 0:
+                    partIn = ArmorMaterialType.CORE;
+                    break;
+                case 1:
+                    partIn = ArmorMaterialType.PLATES;
+                    break;
                 case 2:
                     if (materials.size() > 3) {
                         partIn = ArmorMaterialType.PLATES;
@@ -95,16 +102,18 @@ public class DynamicTextureHelper {
                         partIn = ArmorMaterialType.TRIM;
                     }
                     break;
-                default: partIn = ArmorMaterialType.TRIM; break;
+                default:
+                    partIn = ArmorMaterialType.TRIM;
+                    break;
             }
 
             TextureMap map = Minecraft.getMinecraft().getTextureMapBlocks();
             String loc = armor.getArmorModelTexture(stack, partIn);
-            TextureAtlasSprite sprite = map.getTextureExtry(String.format("%s_%s",loc,identifier));
+            TextureAtlasSprite sprite = map.getTextureExtry(String.format("%s_%s", loc, identifier));
 
             if (sprite == null) {
                 if (material.renderInfo.getTextureSuffix() != null) {
-                    sprite = map.getTextureExtry(String.format("%s_%s",loc,material.renderInfo.getTextureSuffix()));
+                    sprite = map.getTextureExtry(String.format("%s_%s", loc, material.renderInfo.getTextureSuffix()));
                     if (sprite == null) {
                         sprite = map.getTextureExtry(loc);
                     }
@@ -160,16 +169,16 @@ public class DynamicTextureHelper {
             if (material.renderInfo.useVertexColoring() && !CustomTextureCreator.exists(loc + "_" + material.identifier)) {
                 int color = material.renderInfo.getVertexColor();
                 int a = (color >> 24);
-                if(a == 0) {
+                if (a == 0) {
                     a = 255;
                 }
                 int r = (color >> 16) & 0xFF;
                 int g = (color >> 8) & 0xFF;
                 int b = (color) & 0xFF;
-                float R = (float)r/255f;
-                float G = (float)g/255f;
-                float B = (float)b/255f;
-                float A = (float)a/255f;
+                float R = (float) r / 255f;
+                float G = (float) g / 255f;
+                float B = (float) b / 255f;
+                float A = (float) a / 255f;
 
                 for (int k = 0; k < bufferedImage.getWidth(); k++) {
                     for (int l = 0; l < bufferedImage.getHeight(); l++) {
@@ -189,40 +198,49 @@ public class DynamicTextureHelper {
             bufferedImages.add(bufferedImage);
         }
 
+        boolean incognito = false;
         for (IModifier modifier : modifiers) {
-
-            TextureMap map = Minecraft.getMinecraft().getTextureMapBlocks();
-            String loc;
-            if (modifier instanceof IArmorMaterialTexture) {
-                loc = ((IArmorMaterialTexture) modifier).getBaseTexture();
-            } else if (modifier instanceof IArmorModelModifier){
-                loc = String.format("%s_%s", ((IArmorModelModifier) modifier).getModelTextureLocation(), modifier.getIdentifier());
-            } else {
-                continue;
+            if (modifier instanceof ModIncognito) {
+                incognito = true;
+                break;
             }
-            TextureAtlasSprite sprite = map.getAtlasSprite(loc);
+        }
+        if (incognito) {
+            for (IModifier modifier : modifiers) {
 
-            if (sprite == map.getMissingSprite()) {
-                continue;
+                TextureMap map = Minecraft.getMinecraft().getTextureMapBlocks();
+                String loc;
+                if (modifier instanceof IArmorMaterialTexture) {
+                    loc = ((IArmorMaterialTexture) modifier).getBaseTexture();
+                } else if (modifier instanceof IArmorModelModifier) {
+                    loc = String.format("%s_%s", ((IArmorModelModifier) modifier).getModelTextureLocation(), modifier.getIdentifier());
+                } else {
+                    continue;
+                }
+                TextureAtlasSprite sprite = map.getAtlasSprite(loc);
+
+                if (sprite == map.getMissingSprite()) {
+                    continue;
+                }
+
+                int iconWidth = sprite.getIconWidth();
+                int iconHeight = sprite.getIconHeight();
+                int frameCount = sprite.getFrameCount();
+
+                if (iconWidth <= 0 || iconHeight <= 0 || frameCount <= 0) {
+                    continue;
+                }
+
+                BufferedImage bufferedImage = new BufferedImage(iconWidth, iconHeight * frameCount, BufferedImage.TYPE_4BYTE_ABGR);
+
+                for (int k = 0; k < frameCount; k++) {
+                    int[][] frameTextureData = sprite.getFrameTextureData(k);
+                    int[] largestMipMapTextureData = frameTextureData[0];
+                    bufferedImage.setRGB(0, k * iconHeight, iconWidth, iconHeight, largestMipMapTextureData, 0, iconWidth);
+                }
+
+                bufferedImages.add(bufferedImage);
             }
-
-            int iconWidth = sprite.getIconWidth();
-            int iconHeight = sprite.getIconHeight();
-            int frameCount = sprite.getFrameCount();
-
-            if (iconWidth <= 0 || iconHeight <= 0 || frameCount <= 0) {
-                continue;
-            }
-
-            BufferedImage bufferedImage = new BufferedImage(iconWidth, iconHeight * frameCount, BufferedImage.TYPE_4BYTE_ABGR);
-
-            for (int k = 0; k < frameCount; k++) {
-                int[][] frameTextureData = sprite.getFrameTextureData(k);
-                int[] largestMipMapTextureData = frameTextureData[0];
-                bufferedImage.setRGB(0, k * iconHeight, iconWidth, iconHeight, largestMipMapTextureData, 0, iconWidth);
-            }
-
-            bufferedImages.add(bufferedImage);
         }
 
         BufferedImage combined = new BufferedImage(textureWidth, textureHeight, BufferedImage.TYPE_4BYTE_ABGR);
@@ -250,10 +268,10 @@ public class DynamicTextureHelper {
 
         @Override
         public boolean equals(Object o) {
-            if(this == o) {
+            if (this == o) {
                 return true;
             }
-            if(o == null || getClass() != o.getClass()) {
+            if (o == null || getClass() != o.getClass()) {
                 return false;
             }
 
