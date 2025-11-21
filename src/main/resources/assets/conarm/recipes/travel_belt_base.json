@@ -1,18 +1,22 @@
 {
   "type": "forge:ore_shaped",
   "pattern": [
-    " s ",
     "lll",
-    " s "
+    "bab",
+    "lll"
   ],
   "key": {
     "l": {
       "type": "forge:ore_dict",
       "ore": "leather"
     },
-    "s": {
+    "b": {
       "type": "forge:ore_dict",
-      "ore": "string"
+      "ore": "ingotAlubrass"
+    },
+    "a": {
+      "type": "forge:ore_dict",
+      "ore": "ingotAluminum"
     }
   },
   "result": {

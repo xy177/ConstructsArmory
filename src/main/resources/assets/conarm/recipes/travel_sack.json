@@ -1,8 +1,8 @@
 {
   "type": "forge:ore_shaped",
   "pattern": [
-    "sls",
-    "rcr",
+    "lll",
+    "aca",
     "lll"
   ],
   "key": {
@@ -10,12 +10,9 @@
       "type": "forge:ore_dict",
       "ore": "leather"
     },
-    "r": {
-      "item": "minecraft:rabbit_hide"
-    },
-    "s": {
+    "a": {
       "type": "forge:ore_dict",
-      "ore": "string"
+      "ore": "ingotAluminum"
     },
     "c": {
       "type": "forge:ore_dict",

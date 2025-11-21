@@ -1,9 +1,9 @@
 {
   "type": "forge:ore_shaped",
   "pattern": [
+    "lal",
     "lwl",
-    "lwl",
-    "l l"
+    "lwl"
   ],
   "key": {
     "l": {
@@ -11,8 +11,12 @@
       "ore": "leather"
     },
     "w": {
-      "item": "minecraft:wool",
-      "data": 0
+      "type": "forge:ore_dict",
+      "ore": "wool"
+    },
+    "a": {
+      "type": "forge:ore_dict",
+      "ore": "ingotAluminum"
     }
   },
   "result": {

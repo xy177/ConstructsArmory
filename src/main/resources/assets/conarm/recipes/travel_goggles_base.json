@@ -1,9 +1,9 @@
 {
   "type": "forge:ore_shaped",
   "pattern": [
-    "lsl",
+    "l l",
     "glg",
-    "   "
+    "b b"
   ],
   "key": {
     "l": {
@@ -14,9 +14,9 @@
       "type": "forge:ore_dict",
       "ore": "blockGlass"
     },
-    "s": {
+    "b": {
       "type": "forge:ore_dict",
-      "ore": "string"
+      "ore": "ingotAlubrass"
     }
   },
   "result": {
