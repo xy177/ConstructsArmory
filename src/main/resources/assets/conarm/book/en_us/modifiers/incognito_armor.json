@@ -7,6 +7,7 @@
   ],
   "effects": [
     "Hides all modifiers visually",
+    "Does NOT hide accessories",
     "Makes good use of wet sponges",
     "Requires no modifier"
   ],
