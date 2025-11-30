@@ -1,27 +1,10 @@
 ---
-name: Bug Report
-about: Create a report for crashes, bugs, and other unintended behavior
+name: Bug report
+about: Report something that is not working in the mod
 title: ''
-labels: bug
-assignees: TheIllusiveC4
+labels: new bug
+assignees: ''
 
 ---
 
-<!--
-#### Notice
-Please reproduce all issues without any other unnecessary mods before submitting.
--->
-#### Versions (Be specific, do not write "latest"):
-* Construct's Armory: 
-* Tinkers' Construct:
-* Mantle:
-* Forge:
-#### Observed Behavior:
-#### Expected Behavior:
-#### Steps to Reproduce:
-1.
-2.
-3.
-...
-
-Crash Log: Please use a paste site like [hastebin](https://hastebin.com/).
+Make sure that the bug you are reporting happens on the LATEST version of Antique Armory AND Tinkers' Antique, especially if you are playing on a modpack that hasn't been updated in awhile. It is likely that the bug you are reporting has already been fixed and will count as an invalid issue.
