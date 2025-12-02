@@ -72,7 +72,7 @@ dependencies {
 	// implementation 'com.cleanroommc:configanytime:3.0'
 
     // Had Enough Items
-    implementation "curse.maven:had-enough-items-557549:7282920"
+    implementation rfg.deobf("curse.maven:had-enough-items-557549:7282920")
 
     // CraftTweaker
 	implementation "CraftTweaker2:CraftTweaker2-API:4.1.20.698"
